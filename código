@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define TAM 8
+
+char tabuleiro[TAM][TAM];
+
+// Inicializa o tabuleiro com peças pretas (P) e brancas (B)
+void inicializar_tabuleiro() {
+    for (int i = 0; i < TAM; i++) {
+        for (int j = 0; j < TAM; j++) {
+            if ((i + j) % 2 != 0) {
+                if (i < 3)
+                    tabuleiro[i][j] = 'P'; // Peças pretas
+                else if (i > 4)
+                    tabuleiro[i][j] = 'B'; // Peças brancas
+                else
+                    tabuleiro[i][j] = ' ';
+            } else {
+                tabuleiro[i][j] = ' ';
+            }
+        }
+    }
+}
+
+// Exibe o tabuleiro no terminal
+void exibir_tabuleiro() {
+    printf("\n   ");
+    for (int j = 0; j < TAM; j++) {
+        printf(" %d ", j);
+    }
+    printf("\n");
+
+    for (int i = 0; i < TAM; i++) {
+        printf(" %d ", i);
+        for (int j = 0; j < TAM; j++) {
+            printf("|%c", tabuleiro[i][j]);
+        }
+        printf("|\n");
+    }
+}
+
+// Move uma peça da origem para o destino (ainda sem regras de captura)
+void mover_peca(int ol, int oc, int dl, int dc) {
+    if (tabuleiro[ol][oc] == ' ') {
+        printf("❌ Não há peça na origem!\n");
+        return;
+    }
+    if (tabuleiro[dl][dc] != ' ') {
+        printf("❌ A posição de destino está ocupada!\n");
+        return;
+    }
+
+    // Validação simples de movimento diagonal (sem capturas)
+    if (abs(dl - ol) != 1 || abs(dc - oc) != 1) {
+        printf("❌ Movimento inválido! Apenas um passo na diagonal é permitido.\n");
+        return;
+    }
+
+    // Move a peça
+    tabuleiro[dl][dc] = tabuleiro[ol][oc];
+    tabuleiro[ol][oc] = ' ';
+    printf("✅ Peça movida com sucesso!\n");
+}
+
+int main() {
+    int origem_linha, origem_coluna, destino_linha, destino_coluna;
+
+    inicializar_tabuleiro();
+
+    while (1) {
+        exibir_tabuleiro();
+
+        printf("\n🔽 Digite linha e coluna de ORIGEM (ex: 2 1): ");
+        scanf("%d %d", &origem_linha, &origem_coluna);
+
+        printf("🔼 Digite linha e coluna de DESTINO (ex: 3 2): ");
+        scanf("%d %d", &destino_linha, &destino_coluna);
+
+        mover_peca(origem_linha, origem_coluna, destino_linha, destino_coluna);
+
+        printf("\n---------------------------\n");
+    }
+
+    return 0;
+}
